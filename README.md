@@ -1,6 +1,6 @@
 # RDT-1B: a Diffusion Foundation Model for Bimanual Manipulation
 
-### 📝[Paper](https://arxiv.org/pdf/2410.07864) | 🌍[Project Page](https://rdt-robotics.github.io/rdt-robotics/) | 🤗[Model](https://huggingface.co/robotics-diffusion-transformer/rdt-1b) | 🛢️[Data](https://huggingface.co/datasets/robotics-diffusion-transformer/rdt-ft-data)
+### 📝[Paper](https://arxiv.org/pdf/2410.07864) | 🌍[Project Page](https://rdt-robotics.github.io/rdt-robotics/) | 🤗[Model](https://huggingface.co/robotics-diffusion-transformer/rdt-1b) | 🛢️[Data](https://huggingface.co/datasets/robotics-diffusion-transformer/rdt-ft-data) | 🏞️[Poster](./assets/iclr2025_poster.png)
 
 ![](./assets/head.png)
 
@@ -20,6 +20,7 @@ This repo is an official PyTorch implementation of RDT, containing:
 The following guides include the [installation](#installation), [fine-tuning](#fine-tuning-on-your-own-dataset), and [deployment](#deployment-on-real-robots). Please refer to [pre-training](docs/pretrain.md) for a detailed list of pre-training datasets and a pre-training guide.
 
 ## 📰 News
+- [2025/04/04] [Poster](./assets/iclr2025_poster.png) is uploaded.
 - [2024/12/17] 🔥 [Scripts](#simulation-benchmark) for evaluating RDT in Maniskill Simulation Benchmark is released!
 - [2024/10/23] 🔥 **RDT-170M** (Smaller) model is released, a more VRAM-friendly solution 🚀💻.
 
@@ -185,6 +186,8 @@ If your fine-tuning dataset is in the [Open X-Embodiment](https://robotics-trans
 
    Note 3: If the training oscillates, you can increase the batch size by adding more GPUs or setting a larger `--gradient_accumulation_steps`.
 
+   Note 4: Please specify `--load_from_hdf5` in your script when finetuning with an HDF5 dataset.
+
 ## Deployment on Real-Robots
 
 We have encapsulated the inference of the model into a class named `RoboticDiffusionTransformerModel` (see [this file](scripts/agilex_model.py#L38)). You can call this class's `step()` method for inference. However, you may need to re-implement some parts according to your specific robot. You should at least modify the `_format_joint_to_state()` (L164) and `_unformat_action_to_joint()` (L196) to convert between robot raw actions and unified action vectors that RDT accepts. You may also specify the control frequency of your robot (L49).
@@ -307,6 +310,12 @@ python -m eval_sim.eval_octo --pretrained_path PATH_TO_PRETRAINED_MODEL
 ```
 python -m eval_sim.eval_dp --pretrained_path PATH_TO_PRETRAINED_MODEL
 ```
+
+### RDT on [RoboTwin Benchmark](https://robotwin-platform.github.io/) 
+
+RoboTwin is a benchmark simulator based on Sapien, comprising 50 common dual-arm tasks. All policies are trained on 50 trajectories collected in a clean environment for each of the 50 tasks, and then deployed and tested for success rates in environments corresponding to either easy (clean) or hard (randomized) configurations for the same 50 tasks. You can refer to ​​[https://robotwin-platform.github.io/doc/usage/RDT.html#1-environment-setup](https://robotwin-platform.github.io/doc/usage/RDT.html#1-environment-setup)​​ to set up the environment required for RoboTwin and RDT. According to the official test results of RoboTwin ([RoboTwin 2.0 Leaderboard](https://robotwin-platform.github.io/leaderboard)), RDT ranks second only to Pi0 (excluding the DP3 policy, which utilizes ground truth point clouds).
+<img width="2048" height="1224" alt="image" src="https://github.com/user-attachments/assets/e721ffab-3dde-42f0-b36e-1593aa964a99" />
+
 
 ## FAQ
 
